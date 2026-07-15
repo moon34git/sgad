@@ -16,7 +16,7 @@ BMAD로 설계하고 Ouroboros로 구현하되, Story 단위 Gate를 통과해�
 |---|---|
 | Claude Code (CLI) | `claude --version` |
 | BMAD | Claude Code에서 `/bmad-help` 입력 시 응답 있음. `npx bmad-method install`로 설치하는 별도 npm 패키지라 Claude Code 플러그인 마켓플레이스로는 자동 설치되지 않는다 — SGAD 설치 시 `/sgad`가 감지해서 실행 여부를 물어본다. |
-| Ouroboros | Claude Code에서 `ooo help` 입력 시 응답 있음. 정식 Claude Code 플러그인이라 아래 SGAD 설치 시 `dependencies`로 자동 함께 설치된다. |
+| Ouroboros | Claude Code에서 `ooo help` 입력 시 응답 있음. 정식 Claude Code 플러그인. `ooo help` 응답이 없으면 `/plugin marketplace add`로 Ouroboros 마켓플레이스를 먼저 등록한 뒤 설치해야 한다 — 아래 "dependencies 자동 설치의 실제 조건" 참고. |
 
 BMAD와 Ouroboros는 이 저장소에 포함되어 있지 않다 — SGAD는 그 둘을 잇는 얇은
 오케스트레이션/거버넌스 레이어일 뿐, 어느 쪽도 대체하지 않는다.
@@ -30,8 +30,21 @@ BMAD와 Ouroboros는 이 저장소에 포함되어 있지 않다 — SGAD는 그
 /plugin install sgad@sgad
 ```
 
-Ouroboros가 아직 설치되어 있지 않으면 `dependencies` 선언에 따라 자동으로 함께
-설치된다. BMAD는 플러그인이 아니라 별도 npm 패키지라 자동 설치 대상이 아니다 —
+**dependencies 자동 설치의 실제 조건:** `plugin.json`의 `dependencies` 선언은 **Ouroboros
+마켓플레이스가 이미 `/plugin marketplace add`로 등록되어 있을 때만** 작동한다 — 등록 안
+되어 있으면 `/plugin install sgad@sgad` 자체가 cross-marketplace 에러로 실패한다. Ouroboros
+마켓플레이스가 아직 없으면 먼저 등록한다 (Ouroboros 배포처가 바뀌면 이 값도 달라질 수 있음):
+
+```
+/plugin marketplace add Q00/ouroboros
+/plugin install sgad@sgad
+```
+
+플러그인은 프로젝트가 아니라 Claude Code가 실행되는
+머신 전역에 설치되므로, 다른 프로젝트에서 이미 Ouroboros를 설치한 적이 있다면 이 머신의
+어느 프로젝트에서 `/sgad`를 켜도 이미 응답한다 — 그게 지금 막 설치돼서가 아닐 수 있다.
+
+BMAD는 플러그인이 아니라 별도 npm 패키지라 자동 설치 대상이 아니다 —
 설치 후 처음 `/sgad`를 실행하면 BMAD 존재 여부를 확인하고, 없으면
 `npx bmad-method install` 실행 여부를 먼저 물어본다.
 

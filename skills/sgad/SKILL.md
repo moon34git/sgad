@@ -15,19 +15,29 @@ description: 'Story-Gated Agentic Development(SGAD) 진행 상태를 확인하�
 
 ## Prerequisite Check
 
-아래를 **이 순서 그대로** 확인한다. 하나라도 걸리면 그 자리에서 멈추고 그 항목
-하나만 다음 액션으로 안내한다 — 뒤 항목까지 확인해서 후보를 여러 개 나열하지
-않는다 (Response Format의 "정확한 커맨드 하나" 원칙은 여기도 적용된다).
+아래를 **이 순서 그대로** 확인한다. 뒤 항목까지 미리 확인해서 후보를 여러 개
+나열하지 않는다 (Response Format의 "정확한 커맨드 하나" 원칙은 여기도 적용된다).
+1·2번(BMAD/Ouroboros)은 없으면 사용자 승인을 받아 그 자리에서 설치까지 시도하고
+재확인한다 — 승인 거부나 설치 실패일 때만 멈춘다. 3~5번은 설치가 아니라 Stage
+산출물/문서라 없으면 항상 그 자리에서 멈추고 안내한다(대신 만들어주지 않는다).
 
 1. **BMAD** — `/bmad-help`(또는 설치된 BMAD 버전의 상응 스킬)가 응답하는지 확인한다.
-   BMAD는 Claude Code 플러그인이 아니라 `npx bmad-method install`로 설치하는 별도
-   npm 패키지라 SGAD 플러그인의 `dependencies`로 자동 설치되지 않는다. 응답이
-   없으면 프로젝트에 BMAD가 없다는 뜻이므로, `npx bmad-method install` 실행 여부를
-   사용자에게 먼저 물어보고 승인받은 뒤에만 실행한다 — 임의로 npm 설치를 실행하지
-   않는다. 여기서 멈춘다.
-2. **Ouroboros** — `ooo help`가 응답하는지 확인한다. SGAD 플러그인의 `dependencies`에
-   등록되어 있어 `/plugin install sgad`로 설치하면 자동으로 같이 설치된다. 그래도
-   없다면 별도 설치 문제이니 Ouroboros 쪽 설치 상태를 사용자에게 알리고 멈춘다.
+   응답이 있으면 "BMAD 확인됨"으로 통과. 없으면 프로젝트에 BMAD가 없다는 뜻이므로,
+   `npx bmad-method install` 실행 여부를 사용자에게 먼저 물어보고 승인받은 뒤에만
+   Bash로 실행한다 — 임의로 npm 설치를 실행하지 않는다. 설치 후 다시 `/bmad-help`로
+   확인하고, 통과하면 다음 항목으로, 실패하면 에러를 그대로 보고하고 멈춘다.
+2. **Ouroboros** — `ooo help`가 응답하는지 확인한다. 응답이 있으면 "Ouroboros 확인됨"으로
+   통과 (플러그인은 프로젝트가 아니라 머신 전역 설치이므로, 다른 프로젝트에서 이미
+   설치했다면 이 프로젝트에서도 이미 응답할 수 있다 — 정상이다). 응답이 없으면
+   SGAD 플러그인의 `dependencies` 선언이 있어도 **Ouroboros 마켓플레이스가 이미
+   등록돼 있어야만** 자동 설치가 작동하므로, 아래 두 커맨드를 실행할지 사용자에게
+   먼저 물어보고 승인받은 뒤에만 Bash로 실행한다 — 임의로 실행하지 않는다.
+   ```bash
+   claude plugin marketplace add Q00/ouroboros   # Ouroboros 배포처가 바뀌면 이 값도 달라질 수 있음
+   claude plugin install ouroboros@ouroboros
+   ```
+   실행 후 다시 `ooo help`로 확인하고, 통과하면 다음 항목으로, 실패하면 에러를 그대로
+   보고하고 멈춘다.
 3. **Stage 1 산출물** — `sgad-config.yaml`이 아직 없으면 기본 경로
    `_bmad-output/planning-artifacts/epics.md`를, 있으면 그 안의 `epics_file` 경로를
    확인한다. 없으면 "Stage 1 미완료"로 안내하고 멈춘다 — BMAD로 Epics & Stories부터
@@ -39,7 +49,11 @@ description: 'Story-Gated Agentic Development(SGAD) 진행 상태를 확인하�
    `docs/contracts/interface-data-contract-registry.md`, `docs/workflow/gate-project.md`
    — 없으면 `templates/`의 대응 파일을 복사해서 채우라고 안내하고 멈춘다 (Stage 2 미완료).
 
-5개 전부 통과해야 아래 State Detection으로 넘어간다.
+5개 전부 통과해야 아래 State Detection으로 넘어간다. 1·2번(BMAD/Ouroboros)이 이번 실행에서
+막 설치됐든 이미 설치돼 있었든, 5개 모두 통과한 시점에 "Prerequisite Check 통과 — BMAD ✅
+Ouroboros ✅ SGAD 문서 ✅, SGAD 준비 완료"처럼 짧게 한 번 보고하고 State Detection으로
+넘어간다 — 매번 항목을 나열할 필요는 없고, 뭐가 이미 있었고 뭐가 새로 설치됐는지만
+구분해서 보고한다.
 
 ## State Detection
 
