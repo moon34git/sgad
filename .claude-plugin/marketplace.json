@@ -1,0 +1,28 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "sgad",
+  "description": "BMAD로 설계하고 Ouroboros로 구현하되, Story 단위 Gate를 통과해야만 다음으로 넘어가는 Controlled AI-assisted Development Methodology",
+  "owner": {
+    "name": "moon",
+    "email": "moon34git@gmail.com"
+  },
+  "allowCrossMarketplaceDependenciesOn": ["ouroboros"],
+  "plugins": [
+    {
+      "name": "sgad",
+      "description": "Story-Gated Agentic Development — BMAD→Ouroboros 브릿지 + Guard 문서 라우터",
+      "version": "0.1.0",
+      "source": "./",
+      "category": "development",
+      "license": "MIT",
+      "keywords": [
+        "workflow",
+        "bmad",
+        "ouroboros",
+        "gate",
+        "story",
+        "governance"
+      ]
+    }
+  ]
+}

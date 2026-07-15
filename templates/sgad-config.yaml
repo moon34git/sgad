@@ -1,0 +1,32 @@
+# SGAD project configuration
+#
+# 이 파일을 프로젝트의 docs/workflow/sgad-config.yaml 로 복사해서 채운다.
+# sgad 스킬의 State Detection / Gate 실행이 이 값들을 참조한다.
+
+# Stage 1 산출물 위치
+epics_file: _bmad-output/planning-artifacts/epics.md
+stories_dir: _bmad-output/planning-artifacts/stories
+
+# Stage 3 Seed 위치
+seeds_dir: seeds
+
+# Layer 1 Universal Gate에 쓸 값
+entry_point: app.py              # 예: src/app.py
+entry_point_module: app          # import 체크 시 쓸 모듈명, 예: app
+entry_point_dir: .               # entry_point_module을 import하기 전에 cd할 디렉토리, 예: src
+src_dirs:                        # compileall 대상
+  - app.py
+  - lib
+test_dir: tests
+test_command: "pytest tests -q"  # 프로젝트 테스트 러너가 pytest가 아니면 수정
+
+# Layer 1 확장 — Story Type이 UI인 Story의 Gate에서만 추가로 실행됨
+# (definition-of-done.md의 UI 항목: "UI 프레임워크 smoke test", "화면/패널 단위 import").
+# Story Type=UI인데 둘 다 비어있으면 Gate가 조용히 스킵하지 않고 멈춘다.
+ui_smoke_command: ""             # 예: "python -c \"from app import main; main()\" --smoke-test"
+ui_panels: []                    # 예: [panels.dashboard, panels.settings] — 화면/패널 단위 import 체크 대상 모듈
+
+# Layer 2 Project Gate — 실제 규칙은 docs/workflow/gate-project.md에 정의,
+# 여기서는 그 문서가 참조할 디렉토리/파일 별칭만 선언 (선택 사항)
+pure_modules: []                 # 예: [charts, drift] — UI 프레임워크 import 금지 대상
+data_layer_file: ""              # 예: data/db.py — UI 프레임워크 직접 호출 금지 대상
