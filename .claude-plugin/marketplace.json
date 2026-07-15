@@ -6,7 +6,6 @@
     "name": "moon",
     "email": "moon34git@gmail.com"
   },
-  "allowCrossMarketplaceDependenciesOn": ["ouroboros"],
   "plugins": [
     {
       "name": "sgad",

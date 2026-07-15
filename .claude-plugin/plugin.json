@@ -15,8 +15,5 @@
     "story",
     "governance"
   ],
-  "dependencies": [
-    { "name": "ouroboros", "marketplace": "ouroboros" }
-  ],
   "skills": "./skills/"
 }

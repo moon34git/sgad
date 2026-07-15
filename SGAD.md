@@ -14,14 +14,13 @@ SGAD를 시작하기 전에 아래가 갖춰져 있어야 한다.
 |---|---|
 | Claude Code (CLI) | `claude --version` |
 | BMAD | `/bmad-help` 입력 시 응답 있음. `npx bmad-method install`로 설치하는 별도 npm 패키지. |
-| Ouroboros | `ooo help` 입력 시 응답 있음. Claude Code 플러그인. `plugin.json`의 `dependencies`는 **Ouroboros 마켓플레이스가 이미 `/plugin marketplace add`로 등록돼 있을 때만** SGAD 설치 시 자동 설치를 트리거한다 — 등록 안 돼 있으면 `/plugin install sgad@sgad`가 cross-marketplace 에러로 실패하므로 먼저 등록해야 한다. |
+| Ouroboros | `ooo help` 입력 시 응답 있음. Claude Code 플러그인. 없어도 SGAD 설치/로드를 막지 않는다 — `plugin.json`은 Ouroboros를 `dependencies`로 선언하지 않는다(Claude Code의 플러그인 dependency는 대상 마켓플레이스가 미리 등록돼 있을 때만 작동하고, 아니면 로드 자체가 조용히 실패해 오히려 더 깨진다는 게 실측으로 확인됨). 대신 `/sgad` 최초 실행 시 스킬이 직접 감지해서 설치 여부를 물어본다. |
 | SGAD 플러그인 | `/plugin install sgad@sgad`로 설치, `docs/workflow/sgad-config.yaml` 작성 완료 |
 
 BMAD와 Ouroboros는 이 저장소에 포함되어 있지 않다 — 각자의 설치 방법대로 별도 설치한다
-(Ouroboros는 마켓플레이스가 미리 등록돼 있으면 SGAD 설치 시 자동, BMAD는 `/sgad` 최초
-실행 시 감지해서 설치 여부를 물어봄). 플러그인은 프로젝트가 아니라 Claude Code가 실행되는
-머신 전역에 설치되므로, 다른 프로젝트에서 이미 설치한 적이 있다면 새 프로젝트에서도
-이미 응답할 수 있다 — 방금 자동 설치된 것과 혼동하지 않는다.
+(둘 다 `/sgad` 최초 실행 시 스킬이 감지해서 설치 여부를 물어봄). 플러그인은 프로젝트가
+아니라 Claude Code가 실행되는 머신 전역에 설치되므로, 다른 프로젝트에서 이미 설치한
+적이 있다면 새 프로젝트에서도 이미 응답할 수 있다 — 방금 막 설치된 것과 혼동하지 않는다.
 SGAD는 그 둘을 잇는 얇은 오케스트레이션/거버넌스 레이어일 뿐, 둘을 대체하지 않는다.
 
 ---
