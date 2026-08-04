@@ -552,15 +552,28 @@ grep -RE "^\s*(import streamlit|from streamlit)" charts/ drift/
 ```
 
 함수 호출 금지 체크도 마찬가지로, 여는 괄호까지 요구하면 "NO st.error calls" 같은
-설명 문장(괄호 없음)과 실제 호출 `st.error(...)`(괄호 있음)을 구분할 수 있다.
+설명 문장(괄호 없음)은 걸러진다.
 
 ```bash
 # 잘못된 체크 (설명 문장에도 매칭)
 grep "st\.error" <file>
 
-# 올바른 체크 (실제 호출만 — 여는 괄호 요구)
+# 나은 체크 (괄호 없는 설명 문장은 걸러짐)
 grep -E "st\.error\(" <file>
 ```
+
+**단, 이것으로 완전히 구분되지는 않는다.** docstring이 호출 형태를 괄호째 적어두면
+여전히 오탐이 난다 — 실제로 `"This function does NOT call st.error() or raise ..."`
+라는 docstring 한 줄 때문에 `grep -cE "st\.error\("`가 실제 호출 0건인 파일에서 1을
+반환한 사례가 있다. 같은 이유로 데코레이터 체크도 뚫린다: mutation 함수마다
+`"intentionally NOT decorated with @st.cache_data"` docstring을 달아둔 파일에서는
+`@st.cache_data` 문자열이 20회 넘게 잡혀 grep 기반 판정이 무의미해진다.
+
+그래서 **import 경계는 grep으로 충분하지만, 호출·데코레이터·속성 접근을 보는 체크는
+언어의 파서로 판정하는 편이 안전하다.** 파서는 주석과 docstring을 코드로 보지 않으므로
+이 오탐군이 구조적으로 발생하지 않는다 (Python이면 `ast`, 다른 언어면 그에 해당하는
+파싱 도구). 체크 하나가 계속 오탐을 내면 정규식을 더 정교하게 다듬기보다 파서로
+바꾸는 쪽을 먼저 고려한다.
 
 ---
 

@@ -10,7 +10,7 @@
     {
       "name": "sgad",
       "description": "Story-Gated Agentic Development — BMAD→Ouroboros 브릿지 + Guard 문서 라우터",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "source": "./",
       "category": "development",
       "license": "MIT",

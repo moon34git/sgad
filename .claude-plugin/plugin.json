@@ -1,6 +1,6 @@
 {
   "name": "sgad",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Story-Gated Agentic Development — BMAD Story와 Ouroboros Seed/Run을 잇는 Stage 1~5 오케스트레이션 레이어. Story 단위 Executable Gate를 통과해야만 다음으로 넘어가는 Controlled AI-assisted Development Methodology.",
   "author": {
     "name": "moon",
